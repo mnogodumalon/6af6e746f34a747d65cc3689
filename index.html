@@ -1,0 +1,84 @@
+<!doctype html>
+<!-- lang = the BUILD language (the sandbox fills it; screen readers need a
+     lang from the first byte). data-lang-source="build" tells i18n that this
+     is NOT the platform header's choice (S-14, acceptance 4: a static "en"
+     made every visitor without a login read „You are not logged in“). -->
+<html lang="de" data-lang-source="build">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>claude-react-base</title>
+    <!-- LivingApps Web Components (Chrome: la-header-bar-widget, la-drawer,
+         la-nav). Same-Origin unter dem LA-Host; im Vite-Dev läuft der Pfad
+         über den /react-webcomponents-Proxy (sandbox.py patcht vite.config.ts).
+
+         Die drei Placeholder-Assets sind der OFFIZIELLE CLS-Schutz der
+         Library (Reihenfolge laut Doku: Drawer-Script VOR Drawer-CSS — es
+         spiegelt den persistierten Collapse-Zustand aus localStorage auf
+         <html data-la-drawer-collapsed>, bevor das CSS die Breite
+         reserviert). Links/Classic-Scripts lässt vite build unangetastet.
+
+         Nur der Loader (type="module") wird dynamisch eingehängt: vite build
+         versucht absolute Modul-Pfade aufzulösen und bricht ab ("Failed to
+         resolve … from index.html"). -->
+    <!-- Sprache VOR dem la-Loader setzen: die Widget-Library liest
+         <html lang>; das React-Bundle (src/i18n) lädt erst danach und würde
+         sonst einen Frame/Init zu spät kommen. Gleicher Pre-Hydration-Trick
+         wie der Drawer-Collapse-Spiegel oben. -->
+    <script>
+      (function () {
+        try {
+          var l = localStorage.getItem('app-locale');
+          if (l === 'de' || l === 'en' || l === 'cs') {
+            document.documentElement.lang = l;
+          }
+        } catch (e) { /* private mode */ }
+      })();
+    </script>
+    <link rel="stylesheet" href="/react-webcomponents/current/header-bar-widget.placeholder.css">
+    <script src="/react-webcomponents/current/drawer.placeholder.js"></script>
+    <link rel="stylesheet" href="/react-webcomponents/current/drawer.placeholder.css">
+    <script>
+      // A public page (#/public/<slug>) renders no header, drawer or assistant:
+      // the web-components loader and the Klar embed stay out of a visitor's
+      // load (P-2, 03.11.2026 — 3,8 s → 1,5 s on a slow phone). The dashboard
+      // routes load them as before.
+      if (!/^#\/public(\/|$)/.test(location.hash)) {
+      var laLoader = document.createElement('script');
+      laLoader.type = 'module';
+      laLoader.src = '/react-webcomponents/current/loader.js';
+      document.head.appendChild(laLoader);
+      // Klar assistant (<la-klar-assistant>, mounted in Layout) — appended
+      // dynamically like the loader: an absolute module src in HTML breaks
+      // vite build. In the E2B preview sandbox the path 404s harmlessly
+      // (the tag stays inert).
+      var klarEmbed = document.createElement('script');
+      klarEmbed.type = 'module';
+      klarEmbed.src = '/actions-agent/embed/embed.js';
+      document.head.appendChild(klarEmbed);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Without JS the SPA never mounts and #root stays empty — a blank white
+         page with no explanation. Matters most for public pages, which
+         strangers open from a shared link or QR code. Styles are inline on
+         purpose: they must hold even if the CSS bundle has not loaded. -->
+    <noscript>
+      <div style="max-width: 32rem; margin: 4rem auto; padding: 0 1.5rem; text-align: center; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #374151;">
+        <h1 style="font-size: 1.25rem; font-weight: 600; margin: 0 0 0.75rem;">
+          Diese Seite benötigt JavaScript
+        </h1>
+        <p style="margin: 0 0 1.5rem;">
+          Bitte aktiviere JavaScript in deinem Browser und lade die Seite neu.
+        </p>
+        <p lang="en" style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+          This page needs JavaScript. Please enable it in your browser and reload.
+        </p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

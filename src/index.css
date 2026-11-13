@@ -1,0 +1,334 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Figtree — self-hosted over the LA host, never Google Fonts.
+   `/npm` is the host's unpkg-style mirror (same-origin like /rest and
+   /react-webcomponents; the sandbox dev preview proxies it), versioned and
+   served with a one-year cache. Root-relative URL on purpose: the same-origin
+   contract (src/lib/origin.ts) forbids host literals, and Vite leaves an
+   unresolvable absolute url() untouched for the browser to resolve.
+   Variable font 300–900 in two subsets instead of five static Google cuts;
+   italics load only when used.
+   The family name MUST stay 'Figtree' (not fontsource's 'Figtree Variable'):
+   the LivingApps web components (la-header-bar-widget, la-drawer, la-nav)
+   set `font-family: Figtree` on their shadow :host and resolve the name
+   against the document's faces — Chrome ignores the @font-face rules they
+   ship inside their shadow roots, so these declarations are what the chrome
+   actually renders with. */
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url(/npm/@fontsource-variable/figtree@5.3.0/files/figtree-latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url(/npm/@fontsource-variable/figtree@5.3.0/files/figtree-latin-ext-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url(/npm/@fontsource-variable/figtree@5.3.0/files/figtree-latin-wght-italic.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url(/npm/@fontsource-variable/figtree@5.3.0/files/figtree-latin-ext-wght-italic.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* Figma shadows: subtle warm grey + soft card elevation */
+  --shadow-sm: 0 0 4px 0 rgba(155, 155, 155, 0.5);
+  --shadow: 0 0 4px 0 rgba(155, 155, 155, 0.5);
+  --shadow-md: 0 4px 16px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+  --shadow-2xl: 0 12px 48px 0 rgba(0, 0, 0, 0.15);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Hides CRUD page nav links (.nav-crud-item) via display:none */
+  .nav-crud-item {
+    display: none !important;
+  }
+  /* Inset table row dividers — Figma rebranding: lines don't touch card edges */
+  table tbody tr {
+    border-bottom: none !important;
+  }
+  table tbody tr:not(:last-child) {
+    background-image: linear-gradient(to right, transparent 1.5rem, var(--border) 1.5rem, var(--border) calc(100% - 1.5rem), transparent calc(100% - 1.5rem));
+    background-size: 100% 1px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+  }
+  /* Mobile touch targets: every shadcn <Button> renders with
+     data-slot="button". On phones, floor its height at 44px (Apple HIG)
+     regardless of the size variant the consumer/agent chose (h-8/h-9/h-10),
+     so agent-composed desktop buttons become thumb-friendly on mobile with
+     zero extra agent work. Desktop keeps the compact size. `min-height`
+     only raises the floor — it never fights the height utility. Raw inline
+     buttons (worklist chips, seg-pills) carry no data-slot and are sized
+     explicitly in their own components. */
+  @media (max-width: 639px) {
+    [data-slot="button"] {
+      min-height: 2.75rem;
+    }
+  }
+}
+
+:root {
+  /* Höhe der la-header-bar-widget — das Widget publiziert sie live auf <html>;
+   * der Fallback deckt Embed/Loader-Ausfall. Bestand nur noch als Alias für
+   * Agent-Code, das Layout selbst nutzt die Widget-Variablen direkt. */
+  --topbar-h: var(--la-header-bar-height, 73px);
+
+  /* Z-index ladder — single source of truth for overlay layering.
+   * Use via z-[var(--z-…)]. Chrome sits BELOW overlays so any modal /
+   * drawer covers it; the external shadcn <Dialog> is fixed at 50, so
+   * --z-overlay matches it. NOTE: z-index only ranks WITHIN one stacking
+   * context — a surface must portal to document.body for these to win. */
+  --z-scrim: 20;     /* mobile sidebar backdrop             */
+  --z-sidebar: 30;   /* sidebar                             */
+  --z-chrome: 40;    /* top bar, header menus, chat widget  */
+  --z-header: 45;    /* la-header-bar: ÜBER dem Drawer (40, DOM-später!), da
+                        die geslotteten Menü-Panels (Apps/Profil) im Header-
+                        Stacking-Context leben und sonst UNTER dem Drawer
+                        aufgehen; UNTER --z-overlay, damit Dialoge ihn decken */
+  --z-overlay: 50;   /* dialogs, drawers, record overlay    */
+  --z-lightbox: 60;  /* media lightbox (above overlays)     */
+  --z-drag: 100;     /* drag ghost (above everything)       */
+
+  /* Figma: 16px nav items, 27px cards, 100px pills */
+  --radius: 1rem;
+
+  /* neutral/50 — warm light grey page background */
+  --background: #f9f8f7;
+  /* neutral/900 — black text */
+  --foreground: #000000;
+
+  /* neutral/0 — white cards */
+  --card: #ffffff;
+  --card-foreground: #000000;
+
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+
+  /* orange/500 — primary CTA buttons */
+  --primary: #d14600;
+  --primary-foreground: #ffffff;
+
+  /* blue/10 + blue/900 — secondary (table headers, subtle highlights) */
+  --secondary: #eff6ff;
+  --secondary-foreground: #374151;
+
+  /* neutral/200 + neutral/500 — muted backgrounds and text */
+  --muted: #e5e7eb;
+  --muted-foreground: #9b9b9b;
+  /* readable secondary text (5.7:1 on white) — the brand's muted token stays as it is (Abnahme 7: the
+     public page's subtitle read too faint); use for text people must read, not for decoration */
+  --text-subtle: #666666;
+
+  /* orange/50 + orange/900 — accent (active nav, hover states) */
+  --accent: #fff4ee;
+  --accent-foreground: #c94300;
+
+  --destructive: oklch(0.577 0.245 27.325);
+  /* Text ON solid destructive surfaces (e.g. the HeroBanner action button).
+   * Without this token, text-destructive-foreground generates NO utility and
+   * the label inherits the surrounding red — invisible button text. */
+  --destructive-foreground: #ffffff;
+
+  /* neutral/200 — borders */
+  --border: #e5e7eb;
+  /* neutral/400 — input borders */
+  --input: #d9d9d9;
+  /* orange/500 — focus ring */
+  --ring: #d14600;
+
+  /* Chart palette: orange → blue → dark → warm → light */
+  --chart-1: #ff5c00;
+  --chart-2: #2563eb;
+  --chart-3: #d14600;
+  --chart-4: #374151;
+  --chart-5: #bfdbfe;
+
+  /* Light sidebar (matches Figma: white bg, warm accents) */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #374151;
+  --sidebar-primary: #d14600;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fff4ee;
+  --sidebar-accent-foreground: #c94300;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #d14600;
+}
+
+/* The assistant keyframes (action-return, chat-blink) moved with the chat/
+ * actions subsystem into the <la-klar-assistant> element
+ * (actions-agent/assistant, own shadow stylesheet). */
+
+/* ── LivingApps Chrome-Widgets (loader.js) ─────────────────────────────
+ * Der Header bringt z-index 100000 im Shadow-:host mit — Host-Styles auf
+ * dem Element schlagen die :host-Defaults, so reiht er sich in unsere
+ * z-Leiter ein und Dialoge/Overlays (--z-overlay) decken ihn weiterhin ab.
+ * Der Drawer bekommt KEINEN Override mehr: Seit dem Widget-Release vom
+ * 23.07.2026 ist er auf Desktop eine In-Flow-Spalte (z 40 nur für den
+ * Hover-Peek) und mobil ein Fixed-Overlay (z 50) — beides liegt korrekt
+ * unter unseren Dialogen bzw. bewusst über dem Header. */
+/* App-Frame-Grid — offizielles Host-Layout laut Widget-Team: der body
+ * spannt die Areas top (Header), left (Drawer), center (Content) auf.
+ * Wie auf der Plattform selbst (Gateway-Seiten, 04.09.2026 gemessen) ist der
+ * body GENAU viewporthoch und scrollt nicht: die 1fr-Zeile ist damit definit,
+ * der Drawer so hoch wie der Bildschirm (sein Inneres scrollt, Footer bleibt
+ * unten) und der Inhalt scrollt in der center-Area selbst (Regel unten).
+ * Mit min-height wuchs der body mit dem Inhalt, der Drawer wurde so lang
+ * wie die Seite und scrollte mit ihr weg. Der Seitenhintergrund wandert vom
+ * früheren Layout-Wrapper hierher. #root und der Layout-Wrapper sind
+ * display:contents, damit die Chrome-Elemente direkte Grid-Items sind. */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--background);
+  display: grid;
+  gap: 0;
+  grid-template-areas: "top top top" "left center right" "bottom bottom bottom";
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr) max-content;
+  grid-template-rows: auto 1fr auto;
+}
+#root {
+  display: contents;
+}
+/* Direktkinder ohne eigene Zuordnung (öffentliche Seiten außerhalb des
+ * Layouts) gehören in die Mitte; fixed-positionierte Portale sind ohnehin
+ * aus dem Fluss. Auf dem display:contents-Layout-Wrapper ist grid-area
+ * wirkungslos — die Regel trifft also nur echte Boxen. */
+#root > * {
+  grid-area: center;
+  /* Die center-Area ist der Scroll-Container (Plattform: <main> mit
+   * overflow-y:auto; min-height:0). Gilt für den Layout-Content-Wrapper
+   * (Klasse in Layout.tsx) UND für die öffentlichen Seiten außerhalb des
+   * Layouts, die hier als echte Boxen landen. min-height:0 hebt die
+   * Grid-Item-Mindesthöhe auf, sonst wächst das Item statt zu scrollen. */
+  min-height: 0;
+  overflow-y: auto;
+}
+/* Sonners Toast-Wrapper (<section aria-live aria-label="Notifications…">)
+ * ist ein #root-Direktkind und wird durch die Regel darüber zum Grid-Item:
+ * per Default-stretch spannte er sich unsichtbar über die GESAMTE Center-
+ * Area und schluckte als DOM-späteres Geschwister jeden Klick in den
+ * Inhalt. Der Wrapper wird klick-transparent; das fixed-positionierte
+ * <ol data-sonner-toaster> darunter reaktiviert Pointer-Events, damit
+ * Toast-Buttons (Undo, Schließen) klickbar bleiben. */
+#root > section[aria-live] {
+  pointer-events: none;
+}
+#root > section[aria-live] > * {
+  pointer-events: auto;
+}
+la-header-bar-widget {
+  grid-area: top;
+  /* NICHT --z-chrome (40): der Drawer hat auf Desktop ebenfalls z 40 und
+   * steht im DOM später — bei Gleichstand malt er ÜBER die Menü-Panels,
+   * die im Header-Subtree leben („Panel öffnet unter dem Drawer"). */
+  z-index: var(--z-header);
+}
+la-drawer {
+  grid-area: left;
+}
+/* Vertrag der Widget-Suite: Der Drawer liegt IMMER unter der Header-Bar
+ * (die Menü-Panels des Headers legen sich über die Drawer-Spalte). Auf
+ * Desktop gilt das schon (40 < 45); mobil gibt der Drawer sich selbst
+ * z 50 und läge über unserem abgesenkten Header — auf 44 gekappt bleibt
+ * er über dem Content, unter Header (45) und unter Dialogen (50). */
+@media (max-width: 767.98px) {
+  la-drawer[data-overlay] {
+    z-index: 44;
+  }
+}
+
+/* Desktop: Der Drawer ist Grid-Item der "left"-Area. Sein
+ * :host{height:100%} kollabiert ohne definite Track-Höhe zu 0 und
+ * unterbindet das Grid-Stretching — height:auto (Host-Style schlägt
+ * :host) lässt ihn auf Zeilenhöhe strecken. Mobil NICHT überschreiben:
+ * dort ist er ein Fixed-Overlay mit height:100dvh. */
+@media (min-width: 768px) {
+  la-drawer[data-overlay] {
+    height: auto;
+  }
+}
+
+/* Pre-Upgrade-Platzhalter (CLS-Schutz) kommen von den OFFIZIELLEN
+ * Placeholder-Assets der Library (in index.html eingebunden): Header-Höhe
+ * und Drawer-Spaltenbreite inkl. des persistierten Collapse-Zustands aus
+ * localStorage. Hier nur die Ergänzung, die das offizielle CSS auslässt:
+ * den geslotteten Light-DOM-Inhalt bis zum Upgrade unsichtbar halten
+ * (visibility erhält die reservierte Box) und mobil — wo der fertige
+ * Drawer ein Fixed-Overlay ohne Footprint ist — gar keinen Platz nehmen. */
+la-drawer:not(:defined) {
+  visibility: hidden;
+}
+@media (max-width: 767.98px) {
+  la-drawer:not(:defined) {
+    display: none;
+  }
+}

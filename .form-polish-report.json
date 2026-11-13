@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Umfragen": {
+      "placeholders_set": 4,
+      "defaults_keys": [
+        "status"
+      ],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da die Umfrage nur Stammdaten und Text ohne numerische Felder oder Datumspaare enthält."
+    },
+    "Terminvorschläge": {
+      "placeholders_set": 3,
+      "defaults_keys": [
+        "beginn"
+      ],
+      "computed_keys": [
+        "_termin_dauer_stunden"
+      ],
+      "reason": "Beginn and ende form a date pair, so a virtual duration in hours is computed for the summary line; there is no duration field and no price chain, so no total."
+    },
+    "Antworten": {
+      "placeholders_set": 4,
+      "defaults_keys": [],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da die Antworten nur Auswahl- und Textfelder ohne numerische Berechnung enthalten, und kein Standardwert ist eindeutig."
+    }
+  }
+}

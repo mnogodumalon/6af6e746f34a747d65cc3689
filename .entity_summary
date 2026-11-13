@@ -1,0 +1,74 @@
+Legend: `!` after a field name = required (from the app's base view) —
+a step form that writes such a field must not submit it empty.
+`^` after a field name = shown in the app's list view: the fields users
+recognize a record by — prefer them for select-card titles, stats and recall texts.
+A field's human label follows in quotes where it adds information (`kosten[number] "Kosten (EUR)"`) —
+use the label in every user-facing text, never the identifier.
+A lookup field lists its keys after the type (`[lookup/select: a|b|c]`);
+these are the ONLY valid write values — quote them into the brief verbatim;
+`key=Label` shows the human label where it differs (write the key, show the label).
+`·` lines carry a field's description from the app model — real process
+knowledge: use it for step texts and "why we ask this" hints.
+`≡` = how many records the app held when this was built — CONTEXT only
+(spot empty entities, size the flow). It never chooses the data path: every
+pick-a-record step goes through useRecordSearch, which counts at RUNTIME and
+switches to server-side search when the entity has grown since the build
+(check-intents 3k rejects an EntitySelectStep fed from a useDashboardData array).
+`◈` names the input FORM each field shape wants — range → calendar
+(AvailabilityRangePicker via form.range), choice → pills (ChoiceGroup), record →
+select step (EntitySelectStep), stock → show the quantity, warn on overshoot.
+Pick the form that fits the data; a plain field only when nothing better exists.
+`⚙` lists the service methods for that entity, spelled exactly.
+`✚` lists the entity's Enriched* fields and its enrich() signature,
+spelled exactly — quote both verbatim; an invented enriched field or
+a missing map is a guaranteed type error.
+
+Modules — YOUR import map for the dashboard overview. NEVER paste this block,
+a module path, a hook signature or an app_id into a flow or page brief: the
+lanes read these files themselves through their skill, and a brief that
+prescribed them cost every lane a gate round (live 07.09.2026 — wrong vSQL
+and a `createRecordUrl` call copied into three flows). A brief carries the
+domain: steps, eligible records, fields as `name![type: keys]`, sentences.
+  @/types/app                            entity types, APP_IDS, LOOKUP_OPTIONS
+  @/types/enriched                       EnrichedUmfragen, EnrichedTerminvorschlaege, EnrichedAntworten — the COMPLETE list, no other Enriched* type exists
+  @/lib/enrich                           the enrich functions — exact fields and signatures on the `✚` line of each entity below; every listed map is REQUIRED, and no other enriched field exists
+  @/services/livingAppsService           LivingAppsService, createRecordUrl, extractRecordId — dashboard overview only; a flow writes through its plan (create) or `updates: id` (update), never through the service (gate 3z)
+  @/hooks/useDashboardData               useDashboardData — DASHBOARD OVERVIEW ONLY: the RAW arrays (one per entity, camelCase), their setters, loading, error, fetchAll. Never in a flow page (gate 3y): a flow reads through the journey layer (useRecordSearch, useOccupancy, x.recordOf) + terminvorschlaegeMap, umfragenMap; it carries NO enriched arrays — build those with the `✚` call below
+  @/lib/formatters                       lookupKey, formatDate
+  @/lib/journey                          useStepForm, useJourneySubmit (plan steps: create, or `updates: id` for a change; `link` for references), useRecordSearch (searchFields, filter, where; toItem OPTIONAL — the card is the display name; `(r, ctx) => ctx.ref('gast')` for a referenced record's name), useOccupancy (blocked · freeIn · isFree — availability through the door), useRecordCount (count — ONE number over many records: capacity, open items; never a second useRecordSearch for a count), fieldText, fieldLookup, fieldNumber, fieldDate, fieldRef, makeReference, SHAPES — validation, plan runner, reference, names; door-agnostic. There are NO `<key>Name` fields on a journey record.
+  @/services/journeyPort                 servicePort — the INTERNAL door of the journey port (list · create · update · ref); hand it to useJourneySubmit, useRecordSearch, useOccupancy and to blocks — every write goes through the plan
+  @/lib/polish                           undoToast — success toast with an undo action (every delete in a flow)
+  @/components/blocks/IntentWizardShell  IntentWizardShell, WizardStep (label, heading, needs=[field keys] renders the way back), useWizard — forms=, draftKey=, intro=
+  @/components/blocks/StepNav            StepNav — Back / Continue with the next step's name; onNext returns form.validate(...)
+  @/components/blocks/SummaryStep        SummaryStep — check-answers step before EVERY write (forms=, submit=)
+  @/components/blocks/SuccessStep        SuccessStep — final step from submit.result: reference, facts, next actions; submit= adds „Noch einmal“
+  @/components/blocks/ChoiceGroup        ChoiceGroup — pill radiogroup for a lookup with few options ({...form.choice(key)})
+  @/components/blocks/EntitySelectStep   EntitySelectStep — onSelect, selectedId; adapts cards/search-first to the count; ALWAYS fed via {...x.select} from useRecordSearch; „Neu anlegen“ is BUILT IN (the entity's required fields, created through the port) — never brief a hand-written mini-form
+  @/components/blocks/StatusBadge        StatusBadge, getStatusColor
+  @/components/blocks/BudgetTracker      BudgetTracker
+  @/components/blocks/AvailabilityRangePicker  AvailabilityRangePicker, rangeIsFree, isNightBlocked ({...form.range(from, to, { blocked })})
+There is NO `@/config/appIds`, no `@/config/lookupOptions` and no
+`@/lib/urlUtils` — APP_IDS and LOOKUP_OPTIONS come from `@/types/app`,
+createRecordUrl from the service. Note the lowercase `l` in the service path.
+
+- Umfragen (umfragen): finaler_termin^[applookup/select], titel!^[string/text], beschreibung^[string/textarea], ort^[string/text], status!^[lookup/radio: offen|geschlossen]
+  ≡ 3 records at build time
+  ◈ status → choice (2 options, ChoiceGroup) · finaler_termin → record (terminvorschlaege, EntitySelectStep)
+  ⚙ getUmfragen() · getUmfragenEntry(id) · createUmfragenEntry(fields) · updateUmfragenEntry(id, fields) · deleteUmfragenEntry(id) · queryUmfragen({ filter, orderby, limit, offset, fields }) · countUmfragen(filter?)
+  ✚ EnrichedUmfragen adds ONLY finaler_terminName — via enrichUmfragen(umfragen, { terminvorschlaegeMap }), all maps required
+  → finaler_termin links to app_id 6af6e7378effe68c72d780b5
+- Terminvorschläge (terminvorschlaege): beginn!^[date/datetimeminute], ende!^[date/datetimeminute], umfrage!^[applookup/select]
+  ≡ 3 records at build time
+  · beginn: A specific moment in time consisting of year, month, day, hour and minute (or `null`/`None`) The field value will be a string in the format `<YYYY>-<MM>-<DD>T<HH>:<MM>` (or `null`/`None`). For example: `2000-02-29T11:30`. For `POST`/`PUT`/`PATCH` requests the REST API uses a liberal parsing approach so that strings like `2026`, `February 29, 2000 12:34 MEST`, `letztes Jahr` etc. will be accepted as value datetime values. However this runs the risk of parsing ambiguous values incorrectly. To ensure reliable parsing it is best to use the canonical format specified above.
+  · ende: A specific moment in time consisting of year, month, day, hour and minute (or `null`/`None`) The field value will be a string in the format `<YYYY>-<MM>-<DD>T<HH>:<MM>` (or `null`/`None`). For example: `2000-02-29T11:30`. For `POST`/`PUT`/`PATCH` requests the REST API uses a liberal parsing approach so that strings like `2026`, `February 29, 2000 12:34 MEST`, `letztes Jahr` etc. will be accepted as value datetime values. However this runs the risk of parsing ambiguous values incorrectly. To ensure reliable parsing it is best to use the canonical format specified above.
+  ◈ beginn+ende → range candidate — YOU decide in .intents-staging/occupancy.json whether it is a stay, which applookup is the booked resource, which status keys do not occupy (AvailabilityRangePicker, form.range; blocked = occupancyFor()) · umfrage → record (umfragen, EntitySelectStep)
+  ⚙ getTerminvorschlaege() · getTerminvorschlaegeEntry(id) · createTerminvorschlaegeEntry(fields) · updateTerminvorschlaegeEntry(id, fields) · deleteTerminvorschlaegeEntry(id) · queryTerminvorschlaege({ filter, orderby, limit, offset, fields }) · countTerminvorschlaege(filter?)
+  ✚ EnrichedTerminvorschlaege adds ONLY umfrageName — via enrichTerminvorschlaege(terminvorschlaege, { umfragenMap }), all maps required
+  → umfrage links to app_id 6af6e7330a01dca53569f87d
+- Antworten (antworten): umfrage!^[applookup/select], terminvorschlag!^[applookup/select], teilnehmer_vorname!^[string/text] "Vorname", teilnehmer_nachname!^[string/text] "Nachname", antwort!^[lookup/radio: ja|vielleicht|nein]
+  ≡ 3 records at build time
+  ◈ antwort → choice (3 options, ChoiceGroup) · umfrage → record (umfragen, EntitySelectStep) · terminvorschlag → record (terminvorschlaege, EntitySelectStep)
+  ⚙ getAntworten() · getAntwortenEntry(id) · createAntwortenEntry(fields) · updateAntwortenEntry(id, fields) · deleteAntwortenEntry(id) · queryAntworten({ filter, orderby, limit, offset, fields }) · countAntworten(filter?)
+  ✚ EnrichedAntworten adds ONLY umfrageName, terminvorschlagName — via enrichAntworten(antworten, { umfragenMap, terminvorschlaegeMap }), all maps required
+  → umfrage links to app_id 6af6e7330a01dca53569f87d
+  → terminvorschlag links to app_id 6af6e7378effe68c72d780b5

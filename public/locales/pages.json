@@ -1,0 +1,25 @@
+{
+  "pages": {
+    "en": {
+      "Erste Umfrage anlegen": "Create first poll",
+      "Es läuft: {0} — ein finaler Termin steht noch aus.": "Running: {0} — a final date is still pending.",
+      "Es läuft: {0}.": "Running: {0}.",
+      "Geschlossen": "Closed",
+      "Ja": "Yes",
+      "Keine Umfrage in dieser Ansicht.": "No polls in this view.",
+      "Keine offene Umfrage — lege eine neue an und teile den Link.": "No open poll — create a new one and share the link.",
+      "Link kopieren": "Copy link",
+      "Link kopiert": "Link copied",
+      "Neue Umfrage": "New poll",
+      "Noch keine Terminvorschläge.": "No proposed dates yet.",
+      "Offen": "Open",
+      "Offene Umfragen": "Open polls",
+      "Ohne finalen Termin": "No final date",
+      "QR-Code": "QR code",
+      "Starte deine erste Terminabstimmung.": "Start your first scheduling poll.",
+      "Termin festlegen & schließen": "Set date & close",
+      "Vielleicht": "Maybe"
+    }
+  },
+  "v": 1
+}

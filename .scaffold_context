@@ -1,0 +1,644 @@
+# Scaffold Context — Generated File Contents
+
+These files are pre-generated. Do NOT Read the pre-generated source files — their contracts and contents are in THIS file and in the key-file parts listed below.
+Key file contents (types/app.ts, livingAppsService.ts, App.tsx, Layout.tsx, hooks/libs) are in .scaffold_files_p1, .scaffold_files_p2 — Read each of them with ONE Read right after this file.
+EXCEPTION: DashboardOverview.tsx is NOT included here. You MUST Read it with the Read tool before Write.
+Your job: Analyze data (1-2 sentences), Read then Write DashboardOverview.tsx (once), build.
+Large custom UI blocks (a self-contained concept of ~60+ lines no widget covers) are NOT written inline: dictate the props interface in a brief, dispatch build_components (ONE call, all components), write the Overview against your own interface, and call await_components before any gate or build — see CLAUDE.md Step 1b.
+DashboardOverview receives LOADED data as a prop (`{ data }: { data: DashboardData }`) — src/pages/DashboardReady.tsx (generator-owned) runs useDashboardData() and the loading/error surfaces before the page mounts. Do NOT call useDashboardData() in the page and write NO loading/error early-return; hooks may sit anywhere in the component body.
+Component API contracts (EntityCrud — the CRUD/overlay plumbing — plus DashboardGrid, WorkList, HeroBanner, StatCard, SatelliteSection, polish, RecordView) are inlined in the cheatsheet section below — do NOT Read those files. Read a widget file only for the ONE widget you compose (plus its .example.tsx).
+Dialogs and the record overlay are OWNED by the pre-generated useEntityCrud()/{crud.surfaces} (contract in the cheatsheet below): wire EVERY record click to crud.<entity>.openDetail(record), creates/edits to crud.<entity>.openCreate(defaults)/openEdit(record), put the record's next workflow step into the footer option, and keep {crud.surfaces} as the LAST child of the page JSX. `<entity>` is the camelCase key spelled out in the contract below — the SAME key everywhere in this API, `top.type` included; the snake_case identifier is never an API key (a live build wrote crud.<snake_case> and lost a whole build cycle to TS2551, in the same file where it had used the camelCase form correctly two lines up). Never re-roll dialog state, submit handlers, an overlay stack or a RecordOverlayHost — completeness of the overlay bodies is generated, but WHICH clicks open them is on you: every entity the user can see needs its click wired.
+The Enriched* types are inlined below IN FULL — take those field names verbatim; never infer one from the target entity.
+Entity display names come from appLabel(key) — every key is listed below; never re-type a name, and never wrap one in a local helper.
+index.css is pre-generated with the shared design system. Do NOT edit it.
+src/config/ai-features.ts is editable — set AI_PHOTO_SCAN['Entity'] = true to enable photo scan in dialogs.
+NEVER use Bash cat/echo/heredoc for file operations — always use Read/Write/Edit tools.
+
+Generated 174 scaffold files:
+  - src/App.tsx
+  - src/i18n/index.ts
+  - src/i18n/common.ts
+  - src/components/ErrorBoundary.tsx
+  - src/components/ErrorBus.tsx
+  - src/components/Layout.tsx
+  - src/types/la-widgets.d.ts
+  - src/components/PageShell.tsx
+  - src/components/ActionsSidebar.tsx
+  - src/pages/DashboardOverview.tsx
+  - src/pages/DashboardReady.tsx
+  - src/components/DashboardStates.tsx
+  - src/components/ConfirmDialog.tsx
+  - src/components/StatCard.tsx
+  - src/components/DashboardGrid.tsx
+  - src/components/WorkList.tsx
+  - src/components/HeroBanner.tsx
+  - src/components/SatelliteSection.tsx
+  - src/components/PickExistingDialog.tsx
+  - scripts/check-dashboard.mjs
+  - scripts/check-lookup-keys.mjs
+  - scripts/check-hub.mjs
+  - scripts/check-icons.mjs
+  - scripts/check-blocks.mjs
+  - scripts/check-components.mjs
+  - scripts/check-public.mjs
+  - scripts/check-hooks.mjs
+  - scripts/check-intents.mjs
+  - scripts/check-plan.mjs
+  - scripts/wire-intent.mjs
+  - scripts/i18n-tx.mjs
+  - scripts/heal-tsc.mjs
+  - scripts/heal-gates.mjs
+  - scripts/check-staging.mjs
+  - scripts/check-vsql.mjs
+  - src/components/Combobox.tsx
+  - src/components/DatePicker.tsx
+  - .placeholder-tasks.json
+  - src/config/form-enhancements/types.ts
+  - src/config/form-enhancements/Umfragen.ts
+  - src/config/form-enhancements/Terminvorschlaege.ts
+  - src/config/form-enhancements/Antworten.ts
+  - scripts/parse-formulas.mjs
+  - scripts/apply-placeholders.mjs
+  - src/config/intents.ts
+  - src/components/IntentsNav.tsx
+  - src/components/NavRows.tsx
+  - src/components/blocks/IntentWizardShell.tsx
+  - src/components/IntentWizardShell.tsx
+  - src/components/blocks/EntitySelectStep.tsx
+  - src/components/EntitySelectStep.tsx
+  - src/components/blocks/BudgetTracker.tsx
+  - src/components/BudgetTracker.tsx
+  - src/components/blocks/StatusBadge.tsx
+  - src/components/StatusBadge.tsx
+  - src/components/blocks/AvailabilityRangePicker.tsx
+  - src/components/blocks/SummaryStep.tsx
+  - src/components/blocks/SuccessStep.tsx
+  - src/components/blocks/StepNav.tsx
+  - src/components/blocks/ChoiceGroup.tsx
+  - src/components/blocks/FieldErrorSummary.tsx
+  - src/components/blocks/Field.tsx
+  - src/components/blocks/Bound.tsx
+  - src/components/blocks/InlineCreate.tsx
+  - src/components/blocks/FileField.tsx
+  - src/components/blocks/ListEntries.tsx
+  - src/components/blocks/SuggestionPicker.tsx
+  - src/components/blocks/LoadProblem.tsx
+  - src/components/blocks/ViewTextEditor.tsx
+  - src/lib/journey/policy.ts
+  - src/lib/journey/usePolicy.ts
+  - src/lib/journey/intentPolicy.ts
+  - src/lib/journey/port.ts
+  - src/lib/journey/format.ts
+  - src/lib/journey/reference.ts
+  - src/lib/journey/draft.ts
+  - src/lib/journey/occupancy.ts
+  - src/lib/journey/selectMode.ts
+  - src/lib/journey/search.ts
+  - src/lib/journey/fields.ts
+  - src/lib/journey/recordLabels.ts
+  - src/lib/journey/flowLinks.ts
+  - src/lib/journey/upload.ts
+  - src/lib/journey/useOccupancy.ts
+  - src/lib/journey/useRecordCount.ts
+  - src/lib/journey/readFailures.ts
+  - src/lib/journey/exclusive.ts
+  - src/lib/journey/useLiveList.ts
+  - src/lib/journey/visitorKey.ts
+  - src/lib/journey/useRecordSearch.ts
+  - src/lib/journey/useStepForm.ts
+  - src/lib/journey/useJourneySubmit.ts
+  - src/lib/journey/summary.ts
+  - src/lib/journey/suggestions.ts
+  - src/lib/journey/ranking.ts
+  - src/lib/journey/submissions.ts
+  - src/lib/journey/index.ts
+  - src/lib/journey/publicPort.ts
+  - src/lib/journey/publicColumn.ts
+  - src/lib/journey/rules.ts
+  - src/lib/journey/messages.ts
+  - src/services/journeyPort.ts
+  - src/config/journey.ts
+  - src/config/plan.ts
+  - src/lib/journey/flows/UmfrageAnlegen.ts
+  - src/lib/journey/flows/UmfrageAbschliessen.ts
+  - scripts/check-journey.mjs
+  - scripts/render-smoke.mjs
+  - src/lib/consent.ts
+  - src/index.css
+  - src/lib/origin.ts
+  - src/lib/permissions.ts
+  - src/components/ToolButton.tsx
+  - src/lib/sentry.ts
+  - src/lib/stale-bundle.ts
+  - src/lib/ai.ts
+  - src/components/VersionCheck.tsx
+  - src/components/AttachmentsSection.tsx
+  - src/config/ai-features.ts
+  - src/lib/formatters.ts
+  - src/lib/polish.ts
+  - src/hooks/useDashboardData.ts
+  - src/hooks/useLiveRecords.ts
+  - src/lib/publicClient.ts
+  - src/pages/public/PublicFormPage.tsx
+  - src/pages/public/registry.tsx
+  - src/pages/public/PublicPage.tsx
+  - src/components/PublicShell.tsx
+  - src/lib/publicPagesAdmin.ts
+  - src/pages/PublicPagesAdmin.tsx
+  - src/pages/PublicPageFields.tsx
+  - src/components/FieldPolicyEditor.tsx
+  - src/lib/intentsAdmin.ts
+  - src/pages/IntentFields.tsx
+  - src/components/IntentPolicyLoader.tsx
+  - src/lib/pageJobs.ts
+  - src/components/PageJobDialog.tsx
+  - src/pages/IntentsAdmin.tsx
+  - src/lib/appMap.ts
+  - src/pages/AppMap.tsx
+  - src/components/PlanNotice.tsx
+  - src/hooks/usePageJobs.ts
+  - src/components/PageJobStatus.tsx
+  - src/types/enriched.ts
+  - src/lib/enrich.ts
+  - src/components/AddressAutocomplete.tsx
+  - src/components/widgets/RecordView.tsx
+  - src/components/widgets/MediaViewer.tsx
+  - src/components/widgets/RecordView.example.tsx
+  - src/components/widgets/MediaViewer.example.tsx
+  - src/components/widgets/primitives.ts
+  - src/components/widgets/CalendarWidget.tsx
+  - src/components/widgets/CalendarWidget.example.tsx
+  - src/components/widgets/ResourceTimeline.tsx
+  - src/components/widgets/ResourceTimeline.example.tsx
+  - src/components/widgets/KanbanWidget.tsx
+  - src/components/widgets/KanbanWidget.example.tsx
+  - src/components/widgets/MapWidget.tsx
+  - src/components/widgets/MapWidget.example.tsx
+  - src/components/widgets/ChartWidget.tsx
+  - src/components/widgets/ChartWidget.example.tsx
+  - src/components/widgets/QrCode.tsx
+  - src/components/widgets/QrCode.example.tsx
+  - src/components/widgets/PublicPageQr.tsx
+  - tsconfig.app.json
+  - src/components/dialogs/UmfragenDialog.tsx
+  - src/components/details/UmfragenDetails.tsx
+  - src/components/dialogs/TerminvorschlaegeDialog.tsx
+  - src/components/details/TerminvorschlaegeDetails.tsx
+  - src/components/dialogs/AntwortenDialog.tsx
+  - src/components/details/AntwortenDetails.tsx
+  - src/components/EntityCrud.tsx
+  - src/types/leaflet-plugins.d.ts
+  - .lane-context.md
+
+## The enrich() output contract
+
+`enrich<Entity>(...)` returns the record plus EXACTLY the extra fields below and no others.
+The resolved name of a lookup is ALWAYS `<lookupField>Name`, never the target entity's own display field:
+WRONG: `auftrag.fahrzeugKennzeichen`, `rechnung.kundeVorname` — RIGHT: `auftrag.fahrzeugName`, `rechnung.kundeName`.
+Enriched fields live ONLY on the Enriched* type — whatever carries a record you read them from (overlay-union member, callback param) must be typed Enriched*, not the raw record type:
+WRONG: `{ type: 'rechnung'; record: Rechnungen }` … `top.record.kundeName` (TS2339) — RIGHT: `{ type: 'rechnung'; record: EnrichedRechnungen }`.
+
+## src/types/enriched.ts
+```
+import type { Antworten, Terminvorschlaege, Umfragen } from './app';
+
+export type EnrichedUmfragen = Umfragen & {
+  finaler_terminName: string;
+};
+
+export type EnrichedTerminvorschlaege = Terminvorschlaege & {
+  umfrageName: string;
+};
+
+export type EnrichedAntworten = Antworten & {
+  umfrageName: string;
+  terminvorschlagName: string;
+};
+
+```
+
+## Localized entity names — appLabel(), never a literal
+
+`appLabel(key)` from '@/i18n' returns the entity name in the ACTIVE language.
+These are ALL the keys; the names are shown for orientation only:
+
+  appLabel('umfragen')           →  Umfragen
+  appLabel('terminvorschlaege')  →  Terminvorschläge
+  appLabel('antworten')          →  Antworten
+
+WRONG: `title="Umfragen"` — and equally wrong: a local helper that returns
+       that literal behind an `i18n-exempt` marker. Gate 21 and the mechanical
+       healer both SKIP that marker, so the label stays frozen in one language
+       and NOTHING reports it.
+RIGHT: `title={appLabel('umfragen')}`
+
+## Component API cheatsheet
+
+Extracted verbatim from the component file headers — reading the files
+would give you EXACTLY this. Do NOT Read these files for their
+contracts; Read one only if the contract below is insufficient.
+
+### src/i18n/index.ts
+```
+/**
+ * src/i18n/index.ts — runtime language layer (generated). NEVER edit.
+ *
+ * The dashboard ships the CORE locales de/en baked in; ADDITIONAL locales
+ * (e.g. ru) load as overlays from `locales/{lang}.json` next to the bundle —
+ * uploaded server-side, no rebuild needed. The active locale is chosen at
+ * runtime: LA profile language → localStorage 'app-locale' → build locale.
+ * Switching remounts the tree (LocaleGate in App.tsx), so plain calls inside
+ * component bodies stay correct — never hoist their results into module-scope
+ * constants.
+ *
+ * Scaffold chrome and structure labels are already localized — read them,
+ * never re-type them:
+ *   t(key, params?)                 — catalog chrome text ('save', 'search', …)
+ *   tp(key, n, params?)             — plural-aware: catalog keys key_one/key_few/
+ *                                     key_many/key_other (Intl.PluralRules)
+ *   appLabel(entityKey)             — localized entity display name
+ *   fieldLabel(entityKey, field)    — localized field label
+ *   lookupLabel(entityKey, field, optionKey) — lookup option label (null = unknown)
+ *   dateFormat()/dateTimeFormat()/dateFnsLocale()/localeTag()/CURRENCY
+ *
+ * Text YOU write (overview, intent pages, bespoke public pages): write it
+ * ONCE in the build language and MARK it with tx — the pipeline generates
+ * every translation after you finish. NEVER write translations yourself,
+ * NEVER build translation tables.
+ *
+ *   import { tx, appLabel } from '@/i18n';
+ *   <h2>{tx('Auslastung')}</h2>
+ *   label: tx('Bearbeiten')
+ *   toast(tx`${name} — zurückgegeben`)   // tagged template for interpolation
+ *
+ * The tagged form keeps expressions OUT of the sentence ({0}/{1} slots), so
+ * it stays translatable — never assemble text with plain `${…}` literals or
+ * string concatenation. tx at MODULE SCOPE freezes one language at import
+ * time — call it inside the component body only. Deliberate exceptions
+ * (brand names, codes) take an i18n-exempt comment on the line.
+ *
+ * WRONG: <h2>Auslastung</h2>            (unmarked — frozen in one language)
+ * WRONG: const T = tx('Auslastung');    (module scope — frozen at import)
+ * RIGHT: <h2>{tx('Auslastung')}</h2>    (translated at render time)
+ *
+ * makeT (LEGACY): older pages carry per-page {de,en} tables and render
+ * tt('key') — still fully supported, but do not write new ones.
+ */
+```
+
+### src/components/EntityCrud.tsx
+```
+/**
+ * EntityCrud — pre-generated CRUD + overlay plumbing for the dashboard.
+ * Compose it; NEVER re-roll dialog state, submit handlers, an overlay stack
+ * or a RecordOverlayHost in the page — this file owns all of it.
+ *
+ * API at a glance:
+ *   const data = useDashboardData();
+ *   const crud = useEntityCrud(data, {
+ *     // optional — the ONE semantic slot on the overlay: the record's next
+ *     // workflow step. Return undefined for types without one.
+ *     footer: (top) => top.type === 'umfragen'
+ *       ? { label: …, onClick: () => … }
+ *       : undefined,
+ *   });
+ *
+ *   `top.type` is the SAME camelCase key as `crud.<entity>` — one spelling
+ *   per entity, everywhere in this API.
+ *   …
+ *   crud.umfragen.openCreate({ …defaults })   // create dialog, prefilled — defaults are
+ *                                       // shape-tolerant: bare lookup keys / record ids are fine
+ *   crud.umfragen.openEdit(record)            // edit dialog (recordId + defaults wired)
+ *   crud.umfragen.openDetail(record)          // record overlay — pass the RAW record,
+ *                                       // enrichment is resolved inside
+ *   crud.overlay                         // RecordOverlayStack<OverlayItem> for drills:
+ *                                       // push / pop / replace / close
+ *   crud.enriched.umfragen              // the display-ready array for EVERY entity —
+ *                                       // Enriched* where relations exist, the raw array
+ *                                       // otherwise. Reuse these; never call enrich*()
+ *                                       // in the page, and never guess which entity has
+ *                                       // one: they all do.
+ *   {crud.surfaces}                      // render ONCE at the end of the page JSX:
+ *                                       // all entity dialogs + the overlay host
+ *
+ * Built in (do NOT re-implement): optimistic update + Rückgängig counter-write
+ * on edit, fetchAll-on-error, edit-from-overlay, and per-entity overlay bodies
+ * (RecordHeader + <{Entity}Details> with every relation reachable and the
+ * contextual "+" prefilled; list-field back-references additionally get a
+ * "choose existing" picker that links an EXISTING record — built in, do not
+ * re-roll). Drag writes (onEventDrop/onCardMove) stay YOURS:
+ * optimistic setter first, PATCH in background, undoToast with counter-write.
+ *
+ * Overlay content per entity (the host renders these — you never compose
+ * Details blocks yourself):
+ *   umfragen: finaler_termin, titel, beschreibung, ort, status  ·  → terminvorschlaege · ← terminvorschlaege (list + contextual +) · ← antworten (list + contextual +)
+ *   terminvorschlaege: beginn, ende, umfrage  ·  → umfragen · ← umfragen (list + contextual +) · ← antworten (list + contextual +)
+ *   antworten: umfrage, terminvorschlag, teilnehmer_vorname, teilnehmer_nachname, antwort  ·  → umfragen · → terminvorschlaege
+ */
+```
+
+### src/components/DashboardGrid.tsx
+```
+/**
+ * DashboardGrid — the page skeleton every dashboard composes into.
+ *
+ * It owns the page PHYSICS so they cannot vary between builds:
+ *   · mobile order: hero → kpis → aside (work lists first) → primary
+ *   · staggered motion-safe entrance: hero 0ms → kpis 120ms → aside 240ms → primary 360ms
+ *   · consistent gaps (gap-6 / space-y-6)
+ *
+ * You pick the VARIANT — a semantic decision, like picking the widget:
+ *
+ *   · 'split' (default) — KPIs on top; primary 2/3 left (3/4 on xl),
+ *     aside rail right. The workhorse: calendar/map/detail + a work list.
+ *   · 'wide' — KPIs on top; primary takes the FULL width; aside surfaces
+ *     follow as ONE band of equal columns below. For surfaces that need
+ *     room: a kanban board, a resource timeline, a wide data table, a
+ *     7-day week. Pair with the slim `<StatStrip>` so the surface starts
+ *     high on the page.
+ *   · 'rail' — DEPRECATED, never choose it for new dashboards (kept only so
+ *     existing ones keep compiling): the side column grows with the SUM of
+ *     its surfaces and outruns the board. Use 'wide' + `<StatStrip>`.
+ *
+ * It owns NOTHING content-related — every slot takes arbitrary nodes:
+ *
+ *   <DashboardGrid
+ *     variant="wide"                                       // optional — default 'split'
+ *     hero={überfällig.length > 0 && <HeroBanner …>}      // optional — only when urgent
+ *     kpis={<StatStrip>…</StatStrip>}                      // optional — or <StatCardRow>
+ *     aside={<><WorkList … /><WorkList … /></>}            // optional — 1–2 surfaces, OWN axis
+ *     primary={<KanbanWidget … />}                         // the weight: board/calendar/timeline/table
+ *   />
+ *
+ * The page header (h1 greeting + context line + primary action button) stays
+ * ABOVE this component — it is not a slot.
+ *
+ * Opting out: building the page layout by hand is allowed ONLY for a genuinely
+ * different page shape (full-screen map, gallery-first) and costs a written
+ * justification comment: `// layout-opt-out: <reason>`.
+ */
+```
+
+### src/components/WorkList.tsx
+```
+/**
+ * WorkList — the aside ACTION list (not a link list).
+ *
+ * Anatomy it owns, so it cannot degrade between builds:
+ *   · every row opens the record's detail (→ <RecordOverlay>) via `onItemClick`
+ *   · the trailing quick-action performs the workflow's NEXT STEP (advance the
+ *     status, confirm, check-out) — wired as role="button" with stopPropagation,
+ *     never a nested <button>
+ *   · status lives in the second line as a colored WORD, never a truncating badge
+ *   · capped at `max` rows with a "+N weitere" line
+ *   · empty state shows the NEXT real record or a CTA — never a dead
+ *     "Keine Einträge" box without a way forward
+ *
+ * What a row SHOWS and what the action DOES stays with the consumer:
+ *
+ *   <WorkList
+ *     title="Fällig heute & überfällig"
+ *     items={faellige.map(r => ({
+ *       id: r.record_id,
+ *       title: r.kundeName ?? r.fields.kennzeichen,
+ *       secondLine: <><span className="font-medium text-destructive">Überfällig</span>
+ *                     <span className="text-muted-foreground"> · {formatDate(r.fields.faellig)}</span></>,
+ *       action: { label: '✓ Weiter', onClick: () => advance(r) },   // same shared helper as board + overlay
+ *     }))}
+ *     onItemClick={id => overlay.replace({ id })}
+ *     empty={{ text: 'Alles im Zeitplan — nächster Termin Di 11:00', action: { label: 'Neuer Auftrag', onClick: openCreate } }}
+ *   />
+ */
+```
+
+### src/components/HeroBanner.tsx
+```
+/**
+ * HeroBanner — the ONE urgent signal, with its resolving action.
+ *
+ * One message per dashboard: when the data carries an urgent state (overdue,
+ * unstaffed, over capacity), this banner is the hero — and NOTHING else repeats
+ * it (no tinted KPI for the same number, no second red list). When nothing is
+ * urgent, render no banner at all — the primary widget is the hero.
+ *
+ * `action` is REQUIRED by design: a banner that only states a fact is a dead
+ * end. The button RESOLVES the signal with a write (advance/confirm/send —
+ * optimistic + undoToast), reusing the SAME helper as the work-list quick-
+ * actions and the overlay footer. Only when no write can resolve the signal
+ * does the action fall back to focusing the records (filter/scroll).
+ *
+ *   {überfällig.length > 0 && (
+ *     <HeroBanner
+ *       icon={<IconAlertTriangle size={18} />}
+ *       action={{ label: 'Kunde informieren', onClick: () => advance(überfällig[0]) }}
+ *     >
+ *       <b>{namen(überfällig.map(r => r.kundeName ?? ''))}</b> überfällig — fällig war {formatDate(überfällig[0].fields.faellig)}.
+ *     </HeroBanner>
+ *   )}
+ */
+```
+
+### src/components/StatCard.tsx
+```
+/**
+ * StatCard / StatStrip — the two KPI surfaces of the overview.
+ *
+ * ─── API at a glance (exact prop names — NEVER guess) ──────────────────
+ *
+ *  <StatCard      title value description? icon? tone? onClick? active?
+ *                 footer? className?>
+ *      The full card: big value, optional description line, optional footer
+ *      slot. Use it for the board's headline numbers.
+ *  <StatStrip     className? children>
+ *      The slim KPI bar: it takes <StatStripItem>s as children and nothing
+ *      else. Pass it to <DashboardGrid kpis={…}> when the numbers are
+ *      context, not the headline.
+ *  <StatStripItem title value icon? tone? onClick? active?>
+ *      One segment. `value` is string | number (already formatted).
+ *
+ *  tone (both, default 'default'):
+ *      'default' | 'primary' | 'success' | 'warning' | 'destructive'
+ *      Exported as `StatCardTone`. It follows the VALUE'S STATE, never the
+ *      category — see the palette note below.
+ *
+ *  A clickable card/segment FILTERS the surface below it: pair `onClick`
+ *  with `active` and toggle the filter off on the second click.
+ */
+```
+
+### src/components/SatelliteSection.tsx
+```
+/**
+ * SatelliteSection — one section of a hub record's overlay (hub-and-spoke).
+ *
+ * In a hub app (a central entity with many applookup satellites — Baustelle ←
+ * Mängel/Berichte/Fotos/…), the hub's overlay shows ONE of these per satellite
+ * entity. The component bakes in the three mechanics that are easy to get wrong
+ * by hand, so they're guaranteed by construction:
+ *   1. it renders a "+" whenever the user may create (`onAdd` given — the
+ *      scaffold leaves it out for a list the user may not write);
+ *   2. clicking a row calls `onOpen` (→ open the record's DETAIL overlay via
+ *      overlay.push), NEVER the edit form — editing happens from inside that
+ *      detail;
+ *   3. consistent header-with-count + relation-list + dashed-add layout;
+ *   4. optional `onPick` — a second dashed action "choose existing" for
+ *      satellites whose members already exist before they join (a consultant,
+ *      a customer). EntityCrud wires it for every list-field (multipleapplookup)
+ *      back-reference; hand-rendered sections may pass it too.
+ *
+ * Render one per entity in HUB_TOPOLOGY[hubKey]; the gate checks completeness.
+ *
+ *   <SatelliteSection
+ *     title="Mängel"
+ *     items={maengelVon(b.record_id)}
+ *     getKey={m => m.record_id}
+ *     map={m => ({ name: m.fields.typ, label: m.fields.prioritaet?.label, meta: m.fields.beschreibung, icon: IconAlertTriangle })}
+ *     onOpen={m => overlay.push({ typ: 'mangel', id: m.record_id })}   // DETAIL, not edit
+ *     onAdd={() => openCreate('maengelerfassung', b.record_id)}        // the "+"
+ *   />
+ */
+```
+
+### src/lib/polish.ts
+```
+/**
+ * polish.ts — pre-generated dashboard polish helpers (the "finished dashboard" layer).
+ *
+ *   useClock(ms?)          minute-ticking Date — derive ALL today/now values from it,
+ *                          never from a Date captured once (frozen "today").
+ *                          EVERY time string from `clock` is LOCAL via date-fns format —
+ *                          toISOString() is banned in the overview (UTC flips the day at
+ *                          the wrong hour; gate-enforced), for datetime values too:
+ *                            ❌ clock.toISOString()
+ *                            ✓ format(clock, 'yyyy-MM-dd')           // day key
+ *                            ✓ format(clock, "yyyy-MM-dd'T'HH:mm")   // datetime
+ *   gruss(d)               time-of-day greeting, personalized by itself when the
+ *                          logged-in profile has a first name ("Guten Abend, Anna!",
+ *                          fallback "Guten Abend!") — never append the name yourself
+ *   namen(xs, max?)        "Anna & Ben +2" — the first names, cleanly shortened
+ *   ENTRANCE               staggered-entrance className (motion-safe, ~700ms)
+ *   entranceDelay(ms)      per-block delay style — stagger blocks 0/120/240/360ms
+ *   undoToast(msg, undo?)  success toast via the global Toaster; with `undo` it renders
+ *                          a "Rückgängig" action — pass the counter-write (revert state
+ *                          snapshot + counter-PATCH).
+ *
+ * These helpers ARE the polish layer described in CLAUDE.md — import them,
+ * do not re-derive them by hand.
+ */
+```
+
+### src/components/widgets/RecordView.tsx
+```
+/**
+ * RecordView — pre-generated record-detail widget set (Archetype A).
+ *
+ * The whole detail-view UX (route pages, drawers, modals, lightboxes) ships as
+ * composable primitives here. You feed records into compound components; the
+ * file owns the shells, the layout, the overlay stack. Compose; never
+ * reimplement. Building a custom <Dialog>/<Sheet>/<Drawer> or a
+ * `<div className="fixed inset-0">` modal for record details is forbidden —
+ * THIS file is the detail surface. Customize via slots, never by editing it.
+ *
+ * ─── HARD RULES (read first) ───────────────────────────────────────────
+ *  1. EVERY detail surface MUST include <RecordAttachments appId recordId/>.
+ *     Leave it out and the record's files/notes silently disappear.
+ *  2. NEVER fork the shell: no custom <Dialog>/<Sheet>/<Drawer>/`fixed
+ *     inset-0` for record details. Compose <RecordView>/<RecordOverlay>.
+ *  3. In <RecordOverlay>, NEVER navigate away from a <RecordRelation> — push
+ *     onto the overlay stack (useRecordOverlayStack) instead. The user opened
+ *     a preview; don't rip them out.
+ *  4. Zoom belongs on a DETAIL surface (an overlay/header `media` slot): use
+ *     <MediaThumbnail> there, never a raw <img> the user can't enlarge. A
+ *     clickable list/gallery TILE is ONE click target — it opens the overlay;
+ *     its image is a passive `<img className="object-cover">`.
+ *  5. Never edit this file. If a slot is missing: unblock via children/render-
+ *     prop + // TODO(widget-gap). Never fork, never leave the build red.
+ *
+ * ─── API at a glance (exact prop / return names — NEVER guess) ─────────
+ *
+ *  useRecordOverlayStack<T = RecordOverlayStackItem>(initial?: T[]) ->
+ *    { stack: T[], top: T|null, current: T|null, open: boolean,
+ *      canGoBack: boolean, push(item), pop(), close(), replace(item) }
+ *    `current` aliases `top` (the visible item). push/pop drill the stack;
+ *    replace opens from outside the overlay; close empties it. T is
+ *    UNCONSTRAINED — for ONE entity use its record type
+ *    (`useRecordOverlayStack<Buchung>()`, then `replace(b)` / read `top`); a
+ *    MULTI-type stack uses a `{ type, id }` union (see the example).
+ *
+ *  <RecordView        onBack? onEdit? editLabel? backLabel? aside? className?
+ *                     children>
+ *  <RecordOverlay     open onClose onEdit? onBack?
+ *                     placement?: 'side'|'center'   (default 'side')
+ *                     size?: 'sm'|'md'|'lg'|'xl'    (default 'md')
+ *                     media? footer?(ReactNode OR { label, onClick })
+ *                     counter? onPrev? onNext? ariaLabel?
+ *                     closeOnBackdropClick?(default true) onBeforeClose?
+ *                     editLabel? closeLabel? backLabel? prevLabel? nextLabel?
+ *                     className? children>
+ *  <RecordOverlayHost overlay={stack}                 — THE one shell per page:
+ *                     render:  (top) => ReactNode      the whole stack renders in ONE
+ *                     footer?: (top) => ReactNode      <RecordOverlay>, so push/pop swaps
+ *                              OR { label, onClick }   the body without a remount blink.
+ *                     onEdit?: (top) => void           Back appears from depth 2 on.
+ *                     placement? size? className?>     Prefer this over open-flag overlays.
+ *  <RecordHeader      title subtitle? media? badges? meta? actions? className?>
+ *  <RecordKeyFacts    items: { label, value, icon? }[]   className?>
+ *  <RecordSection     title? icon? cols?: 1|2|3 (default 1)  className? children>
+ *  <RecordField       label value? format? empty?(default '—') emphasis?
+ *                     hideEmpty? className? children?>
+ *      format: 'text'|'longtext'|'date'|'datetime'|'currency'|'bool'|'email'|'url'|'pill'
+ *               (default 'text')
+ *  <RecordRelation    label? name meta? icon? href? onClick? className?>
+ *  <RecordTimeline    items: { id?, when?, who?, text, icon?, actions? }[]
+ *                     renderItem?(item, index) empty? className?>
+ *  <RecordAttachments appId recordId readOnly?>
+ *  <RecordViewSkeleton/>
+ *  <RecordViewEmpty   icon? title? description? action? className?/>
+ *  <RecordViewError   error onRetry? title? retryLabel? className?/>
+ *
+ *  Every `icon` prop is a COMPONENT reference — `icon={IconBed}`, NOT
+ *  `icon={<IconBed/>}`. The `media` slots take a RENDERED element instead:
+ *  `media={<img …/>}`.
+ *
+ *  `format="pill"` reads `.label` off a {key,label} lookup object. For an
+ *  APPLOOKUP, pass the resolved display name (an inline helper that maps the
+ *  stored URL → label by id; see the example), not the raw field. For
+ *  anything the formats don't cover (progress bar, map, rating) pass
+ *  `children` instead of `value` — they render under the label; `value`/
+ *  `format` are then ignored.
+ *
+ *  <RecordOverlay> paging vs. stack — distinct: `onPrev`/`onNext` (+`counter`,
+ *  ←/→ keys) STEP THROUGH SIBLING records (a gallery); the overlay stack
+ *  DRILLS INTO RELATED records. Don't conflate them.
+ *
+ * ─── ❌ COMMON MISTAKES (real build failures) ──────────────────────────
+ *  ❌ <RecordHeader media> / overlay `media` with a raw <img> the user can't
+ *     enlarge → use <MediaThumbnail> for a zoomable detail asset.
+ *  ❌ Nesting <MediaThumbnail> inside a clickable tile → two click targets
+ *     fight (tile-open vs. its own lightbox). Tiles use a passive <img>.
+ *  ❌ navigate() from a <RecordRelation> inside a <RecordOverlay> → use
+ *     overlay.push(); navigation only on a <RecordView> route page.
+ *  ❌ icon={<IconBed/>} → pass the component: icon={IconBed}.
+ *  ❌ badges={[{ label: '…' }]} — `badges`/`meta`/`actions` are ReactNode SLOTS
+ *     (TS2322): pass RENDERED elements, e.g. badges={<Badge>…</Badge>}. Only
+ *     <RecordKeyFacts items> and <RecordTimeline items> take config arrays.
+ *     Exception by design: <RecordOverlay footer> ALSO accepts the family
+ *     action object { label, onClick } (WorkList/HeroBanner idiom) and
+ *     renders the standard full-width primary button from it.
+ *  ❌ Forgetting <RecordAttachments> → files/notes silently vanish.
+ *  ❌ A hand-rolled `fixed inset-0` modal for details → compose <RecordOverlay>.
+ *
+ * Full compiling example: ./RecordView.example.tsx
+ *
+ * @version 1.1.0
+ * @since 2026-07-27  (1.1.0: `footer` is shape-tolerant — ReactNode OR the
+ *                     family action object { label, onClick } (the WorkList/
+ *                     HeroBanner idiom); the object renders the standard
+ *                     full-width primary button. Two independent sessions
+ *                     inferred exactly that idiom on `footer` and hit TS2322 —
+ *                     the family generalization is now correct by design.
+ *                     New exports: RecordOverlayAction, RecordOverlayFooter;
+ *                     RecordOverlayHost's `footer` return type widened too.)
+ * @since 2026-06-03  (1.0.0: first release.)
+ */
+```
