@@ -18,6 +18,9 @@ const IntentFields = lazy(() => import('@/pages/IntentFields'));
 const IntentsAdmin = lazy(() => import('@/pages/IntentsAdmin'));
 const AppMap = lazy(() => import('@/pages/AppMap'));
 // <custom:imports>
+const IntentUmfrageAnlegenPage = lazy(() => import('@/pages/intents/UmfrageAnlegenPage'));
+import { DashboardSkeleton } from '@/components/DashboardStates';
+const IntentUmfrageAbschliessenPage = lazy(() => import('@/pages/intents/UmfrageAbschliessenPage'));
 // </custom:imports>
 
 // Lazy: public pages live outside <Layout> and only load on /#/public/:slug —
@@ -95,6 +98,8 @@ export default function App() {
                 <Route path="verwaltung/oeffentliche-seiten" element={<PublicPagesAdmin />} />
                 <Route path="verwaltung/oeffentliche-seiten/:slug/felder" element={<PublicPageFields />} />
                 {/* <custom:routes> */}
+                <Route path="intents/umfrage-anlegen" element={<Suspense fallback={<DashboardSkeleton />}><IntentUmfrageAnlegenPage /></Suspense>} />
+                <Route path="intents/umfrage-abschliessen" element={<Suspense fallback={<DashboardSkeleton />}><IntentUmfrageAbschliessenPage /></Suspense>} />
                 {/* </custom:routes> */}
                 {/* An unknown hash (a bookmark from before a rebuild renamed the
                     flows, a mistyped link) must not be a blank page. */}

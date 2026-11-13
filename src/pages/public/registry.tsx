@@ -1,5 +1,6 @@
 import type { ComponentType, LazyExoticComponent } from 'react';
 // <public:imports>
+import { lazy } from 'react';
 // </public:imports>
 
 // Registry for agent-built (bespoke) public pages. A slug registered here
@@ -13,5 +14,6 @@ import type { ComponentType, LazyExoticComponent } from 'react';
 // component. (Example kept prose-only so it is not read as a real import.)
 export const PUBLIC_PAGES: Record<string, LazyExoticComponent<ComponentType>> = {
   // <public:pages>
+  'termin-abstimmen': lazy(() => import('@/pages/public/TerminAbstimmen')),
   // </public:pages>
 };
